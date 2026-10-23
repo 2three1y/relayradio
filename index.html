@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relay Radio: hear Nostr live</title>
+<meta name="description" content="Nostr as a radio station. Press play and the live feed comes to you as sound: an earcon for each kind of event, then the note read aloud.">
+<meta property="og:title" content="Relay Radio">
+<meta property="og:description" content="Press play and hear Nostr live: earcons for notes, replies, reposts, reactions, zaps and mentions, then each note read aloud.">
+<meta name="theme-color" content="#14112a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%BB%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the player</a>
+<header class="site-header">
+  <h1><span aria-hidden="true">📻 </span>Relay Radio</h1>
+  <p class="tagline">Nostr as a radio station. Press Play and the live feed comes to you as sound: a short earcon for each kind of event, then the note read aloud.</p>
+</header>
+
+<main id="main">
+  <section class="player" aria-labelledby="player-h">
+    <h2 id="player-h">Player</h2>
+    <p id="status" class="status">Stopped. Press Play to tune in.</p>
+    <div class="transport">
+      <button type="button" id="play" class="big">Play</button>
+      <button type="button" id="next">Next <span class="kbd" aria-hidden="true">N</span></button>
+      <button type="button" id="repeat">Repeat <span class="kbd" aria-hidden="true">R</span></button>
+      <button type="button" id="open">Open note <span class="kbd" aria-hidden="true">Z</span></button>
+      <button type="button" id="settings-open" aria-haspopup="dialog">Settings</button>
+    </div>
+    <fieldset class="station">
+      <legend>Station</legend>
+      <label><input type="radio" name="station" value="global" checked> Curated relays (everyone, filtered)</label>
+      <label><input type="radio" name="station" value="following"> People I follow</label>
+    </fieldset>
+    <p id="station-note" class="hint">Plays everyone posting on a few curated relays, with sensitive notes filtered out. To hear people you follow, add your account below.</p>
+  </section>
+
+  <section class="now" aria-labelledby="now-h">
+    <h2 id="now-h">Now playing</h2>
+    <article id="now" class="card">
+      <p class="empty">Nothing yet.</p>
+    </article>
+  </section>
+
+  <section aria-labelledby="account-h">
+    <h2 id="account-h">Your account (optional)</h2>
+    <p id="account-state">Not signed in. You are listening to the curated relays.</p>
+    <form id="npub-form" class="row" novalidate>
+      <label for="npub">Your npub or NIP-05 address</label>
+      <input id="npub" name="npub" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="npub1… or name@domain.com">
+      <button type="submit">Use this account</button>
+    </form>
+    <p class="hint">This only reads your public follow list, so no key or password is needed. Prefer a signer? <button type="button" id="nostr-login" class="linkish">Sign in with Nostr Login</button></p>
+    <p><button type="button" id="signout" hidden>Forget my account</button></p>
+  </section>
+
+  <section aria-labelledby="history-h">
+    <h2 id="history-h">Recently played</h2>
+    <ol id="history" class="history"></ol>
+    <p id="history-empty" class="hint">Played notes show up here, newest first, with a link to open each one.</p>
+  </section>
+
+  <section aria-labelledby="legend-h">
+    <h2 id="legend-h">What the sounds mean</h2>
+    <p>Each event plays its sound first. Press a button to hear it.</p>
+    <ul class="legend" id="legend"></ul>
+  </section>
+
+  <section aria-labelledby="keys-h">
+    <h2 id="keys-h">Keyboard</h2>
+    <ul class="keys">
+      <li><span class="kbd">Space</span> play or pause</li>
+      <li><span class="kbd">N</span> next event</li>
+      <li><span class="kbd">R</span> repeat the current event</li>
+      <li><span class="kbd">Z</span> open the current note in a Nostr app, to zap or reply there</li>
+      <li><span class="kbd">S</span> settings</li>
+    </ul>
+    <p class="hint">Keys work when focus is not in a text field. On iPhone, use the buttons above.</p>
+  </section>
+
+  <section aria-labelledby="about-h">
+    <h2 id="about-h">About</h2>
+    <p>Relay Radio listens to public Nostr relays and turns what it hears into sound. It never posts, likes or zaps anything for you, and it never shows images or video. By default it listens to a few curated relays that only carry posts from members or a web of trust. Notes marked sensitive (NIP-36 content warnings), notes tagged NSFW, notes with sexual words or slurs, and accounts that call themselves adult are always skipped, and you can mute more words in Settings. The filter is best effort: Nostr is an open network, so if something slips through, press N to skip it.</p>
+    <p>Built only from repos starred by Carter (2three1y). <a href="credits.html">Starred credits and licenses</a>. <a href="https://github.com/2three1y/relay-radio">Source code on GitHub</a>.</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>Made by Carter (2three1y). MIT License.</p>
+</footer>
+
+<div id="announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
+<div class="dialog" id="settings" aria-labelledby="settings-h" aria-hidden="true">
+  <div class="dialog-overlay" data-a11y-dialog-hide></div>
+  <div class="dialog-content" role="document">
+    <h2 id="settings-h">Settings</h2>
+    <form id="settings-form">
+      <fieldset>
+        <legend>Who reads the notes</legend>
+        <label><input type="radio" name="voiceMode" value="speech" checked> The page reads them with a browser voice</label>
+        <label><input type="radio" name="voiceMode" value="screenreader"> My screen reader reads them (VoiceOver, TalkBack)</label>
+        <label><input type="radio" name="voiceMode" value="silent"> Nobody, sounds only</label>
+      </fieldset>
+      <p class="hint">Pick "My screen reader" if the page voice and VoiceOver talk over each other.</p>
+
+      <div class="field">
+        <label for="voice">Browser voice</label>
+        <select id="voice"><option value="">Automatic</option></select>
+      </div>
+      <div class="field">
+        <label for="rate">Speaking speed</label>
+        <input type="range" id="rate" min="0.6" max="2" step="0.1" value="1.1">
+        <output id="rate-out" for="rate">1.1×</output>
+      </div>
+      <div class="field">
+        <label for="maxlen">Longest note to read</label>
+        <select id="maxlen">
+          <option value="140">Short, 140 letters</option>
+          <option value="280" selected>Medium, 280 letters</option>
+          <option value="600">Long, 600 letters</option>
+        </select>
+      </div>
+
+      <fieldset>
+        <legend>Which events play</legend>
+        <div id="kind-toggles"></div>
+      </fieldset>
+      <label><input type="checkbox" id="sayKind" checked> Say the event type before the note</label>
+      <label><input type="checkbox" id="englishOnly" checked> Only notes written in English letters</label>
+      <label><input type="checkbox" id="skipReplies"> Skip replies on the curated relays station</label>
+      <label><input type="checkbox" id="swearing" checked> Skip notes with swearing</label>
+      <label><input type="checkbox" id="skipMedia" checked> Skip notes that are mostly a picture or video</label>
+
+      <div class="field">
+        <label for="ambient">Background sound</label>
+        <select id="ambient">
+          <option value="off">Off</option>
+          <option value="rain">Soft rain</option>
+          <option value="brown">Brown noise</option>
+          <option value="hum">Warm radio hum</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="ambientVol">Background volume</label>
+        <input type="range" id="ambientVol" min="0" max="1" step="0.05" value="0.35">
+      </div>
+      <div class="field">
+        <label for="earconVol">Earcon volume</label>
+        <input type="range" id="earconVol" min="0" max="1" step="0.05" value="0.7">
+      </div>
+      <label><input type="checkbox" id="haptics" checked> Buzz my phone for zaps and mentions</label>
+
+      <div class="field">
+        <label for="mutes">Muted words, one per line or separated by commas</label>
+        <textarea id="mutes" rows="3" spellcheck="false"></textarea>
+      </div>
+      <div class="field">
+        <label for="relays">Relays, one per line</label>
+        <textarea id="relays" rows="5" spellcheck="false" autocapitalize="off"></textarea>
+      </div>
+      <p class="hint">The default relays only carry posts from members or people with a web of trust, so there is less spam and less adult content. The busy relays carry far more, with much less filtering.</p>
+      <p class="buttons"><button type="button" id="relays-reset">Use the curated relays</button> <button type="button" id="relays-busy">Use the busy public relays</button></p>
+    </form>
+    <p><button type="button" class="big" data-a11y-dialog-hide>Done</button></p>
+  </div>
+</div>
+
+<script src="vendor/nostr-tools/nostr.bundle.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

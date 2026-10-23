@@ -1,0 +1,85 @@
+{
+  "project": "Relay Radio",
+  "license": "MIT",
+  "starred_checked": "2026-10-23 (GET /user/starred answered 204 for every repo below)",
+  "credits": [
+    {
+      "name": "nostr-tools",
+      "repo": "https://github.com/nbd-wtf/nostr-tools",
+      "author": "fiatjaf and contributors (nbd-wtf)",
+      "license": "Unlicense",
+      "used_for": "Connecting to Nostr relays, reading notes, reposts, reactions and zaps, decoding npub and NIP-05 addresses. Shipped as its own browser bundle (version 2.25.2).",
+      "files": "vendor/nostr-tools/",
+      "notice": "None required (public domain). Credited anyway.",
+      "license_file": "licenses/nostr-tools.txt"
+    },
+    {
+      "name": "nostr-login",
+      "repo": "https://github.com/nostrband/nostr-login",
+      "author": "Nostr.Band",
+      "license": "MIT",
+      "used_for": "The optional \"Sign in with Nostr Login\" button (extension, Nostr Connect or read-only). It loads only when you press that button. Version 1.7.12, unchanged.",
+      "files": "vendor/nostr-login/",
+      "notice": "Copyright (c) 2023 Nostr.Band, MIT text kept.",
+      "license_file": "licenses/nostr-login.txt"
+    },
+    {
+      "name": "soundcn",
+      "repo": "https://github.com/kapishdima/soundcn",
+      "author": "kapishdima (sounds by Kenney)",
+      "license": "MIT (code), CC0 (Kenney sounds used here)",
+      "used_for": "The earcons: nine sounds from its Kenney Interface Sounds and Digital Audio packs, converted from Ogg to MP3. Its World of Warcraft collection is not used.",
+      "files": "sounds/",
+      "notice": "Sounds are CC0 by Kenney (kenney.nl); the pack license is in sounds/Kenney-License.txt. soundcn's MIT text is in licenses/soundcn.txt.",
+      "license_file": "licenses/soundcn.txt"
+    },
+    {
+      "name": "speakable",
+      "repo": "https://github.com/tollwerk/speakable",
+      "author": "tollwerk GmbH",
+      "license": "MIT",
+      "used_for": "js/speech.js is adapted from it: voice lookup by language, local voices first, the iOS Safari voice-list workaround, and sentence-sized utterances.",
+      "files": "js/speech.js (changed: works on strings, adds speed, voice choice, a watchdog and cancel)",
+      "notice": "Copyright (c) 2020 tollwerk GmbH, MIT text kept.",
+      "license_file": "licenses/speakable.txt"
+    },
+    {
+      "name": "moodist",
+      "repo": "https://github.com/remvze/moodist",
+      "author": "MAZE (remvze)",
+      "license": "MIT (code)",
+      "used_for": "js/ambient.js adapts its WAV encoder and its trick of looping generated audio in a plain audio element. No moodist sound files are used, because its repo mixes CC0 and Pixabay-licensed clips without saying which file is which. The rain, brown noise and hum beds are generated in your browser instead.",
+      "files": "js/ambient.js (changed: mono, volume baked in, procedural beds)",
+      "notice": "Copyright (c) 2023 MAZE, MIT text kept.",
+      "license_file": "licenses/moodist.txt"
+    },
+    {
+      "name": "web-haptics",
+      "repo": "https://github.com/lochie/web-haptics",
+      "author": "lochie",
+      "license": "MIT",
+      "used_for": "The buzz for zaps and mentions. Version 0.0.6, its two dist files joined into one module, code unchanged.",
+      "files": "vendor/web-haptics/",
+      "notice": "MIT text kept.",
+      "license_file": "licenses/web-haptics.txt"
+    },
+    {
+      "name": "a11y-dialog",
+      "repo": "https://github.com/KittyGiraudel/a11y-dialog",
+      "author": "Kitty Giraudel",
+      "license": "MIT",
+      "used_for": "The Settings dialog. Version 8.1.5, unchanged.",
+      "files": "vendor/a11y-dialog/",
+      "notice": "Copyright Kitty Giraudel, MIT text kept.",
+      "license_file": "licenses/a11y-dialog.txt"
+    }
+  ],
+  "starred_not_used": [
+    {
+      "name": "bitcoin-connect",
+      "repo": "https://github.com/getAlby/bitcoin-connect",
+      "license": "MIT",
+      "why": "Starred and allowed, but connecting a wallet adds a lot of weight for one key. Z opens the note in a Nostr app (via njump.me) where you can zap with your own wallet."
+    }
+  ]
+}
