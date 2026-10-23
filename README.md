@@ -2,9 +2,9 @@
 
 Nostr as a radio station. Press Play and the live feed comes to you as sound: a short earcon for each kind of event, then the note read aloud.
 
-Live: https://2three1y.github.io/relay-radio/
+Live: https://2three1y.github.io/relayradio/
 
-Made by Carter (2three1y).
+I made this. Carter (2three1y).
 
 ## What it does
 
