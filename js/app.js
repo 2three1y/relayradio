@@ -52,7 +52,7 @@ bed.setAttribute('aria-hidden', 'true');
 let haptics = null;
 
 async function initAudio() {
-  if (ctx) { if (ctx.state === 'suspended') await ctx.resume().catch(() => {}); return; }
+  if (ctx) { if (ctx.state === 'suspended') ctx.resume().catch(() => {}); return; }
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
   ctx = new AC();
@@ -130,7 +130,7 @@ function fetchProfiles() {
         if (prev && prev.created_at >= ev.created_at) return;
         p.created_at = ev.created_at;
         profiles.set(ev.pubkey, p);
-        if (profileIsSensitive(p)) muted.add(ev.pubkey);
+        if (profileIsSensitive(p, { swearing: cfg.swearing })) muted.add(ev.pubkey);
       } catch { /* bad profile json */ }
     },
     oneose() { sub.close(); },
@@ -370,6 +370,7 @@ async function playItem(item) {
   state.current = item; state.waiting = false;
   await waitForNames([item.author, item.target], 1500);
   if (tok !== state.token) return;
+  if (muted.has(item.author) || (item.target && muted.has(item.target))) { advance(); return; }
   const words = wordsFor(item);
   renderNow(item, words);
   renderStatus();
@@ -402,11 +403,14 @@ function advance() {
 }
 
 async function play() {
-  await initAudio();
+  // everything that needs the tap happens before the first await (iOS)
+  voice.prime();
   state.playing = true;
   playBtn.textContent = 'Pause'; playBtn.dataset.on = 'true';
   updateBed();
+  const ready = initAudio();
   connect();
+  await ready;
   await earcon('start');
   announce(`Playing ${state.station === 'following' ? 'people you follow' : 'the curated relays'}.`);
   if (state.current && !state.current.played) playItem(state.current); else advance();
@@ -433,7 +437,7 @@ function next() {
 }
 function repeat() {
   if (!state.current) { announce('Nothing to repeat yet.'); return; }
-  if (!state.playing) { state.playing = true; playBtn.textContent = 'Pause'; playBtn.dataset.on = 'true'; updateBed(); connect(); }
+  if (!state.playing) { voice.prime(); state.playing = true; playBtn.textContent = 'Pause'; playBtn.dataset.on = 'true'; updateBed(); initAudio(); connect(); }
   playItem(state.current);
 }
 function openNote() {

@@ -56,6 +56,15 @@ export function chunk(text, max = 180) {
 }
 
 let generation = 0;
+let primed = false;
+
+// iOS Safari only lets a page talk after it speaks once inside a tap. Call this
+// synchronously from the click handler.
+export function prime() {
+  if (!supported || primed) return;
+  primed = true;
+  try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch { /* ignore */ }
+}
 
 export function cancel() {
   generation += 1;

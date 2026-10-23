@@ -29,10 +29,12 @@ export function textIsSensitive(text, { swearing = true, mutes = [] } = {}) {
   return false;
 }
 
-export function profileIsSensitive(profile) {
+export function profileIsSensitive(profile, { swearing = true } = {}) {
   if (!profile) return false;
-  const s = [profile.name, profile.display_name, profile.about, profile.nip05].filter(Boolean).join(' ');
-  return /#?(nsfw|porn|onlyfans|xxx|18\+|hentai|nudes?|lewd|adult content)/i.test(s) || SLURS.test(s);
+  const s = [profile.name, profile.display_name, profile.displayName, profile.about, profile.nip05].filter(Boolean).join(' ');
+  if (/#?(nsfw|porn|onlyfans|xxx|18\+|hentai|nudes?|lewd|adult content)/i.test(s) || SLURS.test(s) || SEXUAL.test(s)) return true;
+  const names = [profile.name, profile.display_name, profile.displayName].filter(Boolean).join(' ');
+  return swearing && SWEARING.test(names.replace(/(fuck|shit|bitch|cunt)/gi, ' $1'));
 }
 
 // "English letters": most letters are Latin script. Emoji-only notes pass.
